@@ -19,17 +19,37 @@ namespace SampleMVC.Controllers
 
         public IActionResult Index()
         {
+            if (HttpContext.Session.GetString("user") == null)
+            {
+                // If user is not logged in, redirect to login page
+                return RedirectToAction("login", "Users");
+            }
             var users = _userBLL.GetAll();
-            var listUsers = new SelectList(users, "Username", "Username");
-            ViewBag.Users = listUsers;
+            ViewBag.Users = users;
 
             var roles = _roleBLL.GetAllRoles();
-            var listRoles = new SelectList(roles, "RoleID", "RoleName");
-            ViewBag.Roles = listRoles;
+            ViewBag.Roles = roles;
 
             var usersWithRoles = _userBLL.GetAllWithRoles();
             return View(usersWithRoles);
+
         }
+        [HttpPost]
+        public IActionResult AddUserToRole(string username, int roleId)
+        {
+            try
+            {
+                _roleBLL.AddUserToRole(username, roleId);
+                ViewBag.Message = @"<div class='alert alert-success'><strong>Success!&nbsp;</strong>User added to role successfully !</div>";
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Message = @"<div class='alert alert-danger'><strong>Error!&nbsp;</strong>" + ex.Message + "</div>";
+            }
+            return RedirectToAction("Index", "Users");
+        }
+       
+
 
         public IActionResult Login()
         {
@@ -69,6 +89,7 @@ namespace SampleMVC.Controllers
         public IActionResult Logout()
         {
             HttpContext.Session.Remove("user");
+            TempData["Message"] = String.Empty;
             return RedirectToAction("Login");
         }
 
@@ -106,5 +127,6 @@ namespace SampleMVC.Controllers
             var usersWithRoles = _userBLL.GetAllWithRoles();
             return new JsonResult(usersWithRoles);
         }
+
     }
 }

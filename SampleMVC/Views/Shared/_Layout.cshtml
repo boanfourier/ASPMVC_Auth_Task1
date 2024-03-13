@@ -72,6 +72,7 @@
                         <h6 class="collapse-header">Home Page</h6>
                         <a class="collapse-item" asp-controller="Home" asp-action="Index">Home</a>
                         <a class="collapse-item" asp-controller="Home" asp-action="About">About</a>
+                        <a class="collapse-item" asp-controller="users" asp-action="Index">List User</a>
                     </div>
                 </div>
             </li>
@@ -374,7 +375,7 @@
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
+                    <a class="btn btn-primary" href="/users/login">Logout</a>
                 </div>
             </div>
         </div>
